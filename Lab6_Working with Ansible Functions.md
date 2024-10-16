@@ -76,7 +76,7 @@
             state: latest
           tags:
             - packages
-       - name: Start the vsftpd Service
+        - name: Start the vsftpd Service
           service:
             name: vsftpd
             state: started

@@ -48,3 +48,7 @@ Run the playbook using the following command:
 ```bash
 ansible-playbook create_users.yml
 ```
+Verify the created users 
+```bash
+ansible all -m command -a "tail /etc/passwd" -b
+```

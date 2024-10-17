@@ -50,3 +50,24 @@
 ```bash
 ansible-playbook --tags "play2" tagslabs.yml
 ```
+### Do Until
+```yaml
+---
+- hosts: all
+  tasks:
+  - name: Check if the file is created
+    stat:
+      path: /tmp/somefile.txt
+    register: file_status
+    until: file_status.stat.exists
+    retries: 5
+    delay: 10
+```
+
+```bash
+ansible-playbook file.yaml
+```
+
+![image](https://github.com/user-attachments/assets/e608b8ec-304f-4b99-b6d5-4ea4c01e78d1)
+
+

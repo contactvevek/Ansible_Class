@@ -24,7 +24,7 @@
  ```
 3. Set the WinRM service to start automatically and start the service
   ```powershell
- Set-Service WinRM -StartType Automatic
+ Set-Service WinRM -StartupType Automatic
  Start-Service WinRM
  ```
 

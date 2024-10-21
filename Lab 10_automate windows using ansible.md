@@ -40,29 +40,39 @@
   ```powershell
  winrm set winrm/config/client '@{TrustedHosts="*"}'
  ```
-7. Enable WinRM for HTTPS
- ```powershell
- winrm quickconfig -transport:https
- ```
-8. Create a self-signed certificate for HTTPS (replace with your server's IP address)
+7. Create a self-signed certificate for HTTPS (replace with your server's IP address)
   ```powershell
  $cert = New-SelfSignedCertificate -DnsName "35.188.200.132" -CertStoreLocation Cert:\LocalMachine\My
  ```
-9. Bind the certificate to WinRM
+8. Bind the certificate to WinRM
   ```powershell
- $thumbprint = $cert.Thumbprint
- ```
+  $thumbprint = $cert.Thumbprint
+  ```
   ```powershell
- winrm create winrm/config/Listener?Address=*+Transport=HTTPS '@{Hostname="35.188.200.132"; CertificateThumbprint="$thumbprint"}'
- ```
- 10. Enable the firewall rule for WinRM
+  winrm create winrm/config/Listener?Address=*+Transport=HTTPS "@{Hostname=""35.188.200.132""; CertificateThumbprint=""$thumbprint""}"
+  ```
+9. Enable the firewall rule for WinRM
   ```powershell
  netsh advfirewall firewall add rule name="Windows Remote Management (HTTPS-In)" dir=in action=allow protocol=TCP localport=5986
  ```
- 11. Verify WinRM configuration
+10. Verify WinRM configuration
   ```powershell
   winrm get winrm/config
   ```
+***Note:***If WinRM listener with the same address and transport (HTTPS) is already configured on the system, you need to delete the existing listener before creating a new one with the desired configuration
+
+![image](https://github.com/user-attachments/assets/a0cbf878-5c9f-47b2-af91-4df0956d82f6)
+
+ 1. Run the following command to view all current listeners:
+   ```powershell
+  winrm enumerate winrm/config/listener
+  ```
+ 2. Delete the Existing HTTPS Listener
+ Identify the HTTPS listener from the output (where Transport=HTTPS) and then delete it using the following command:
+  ```powershell
+  winrm delete winrm/config/Listener?Address=*+Transport=HTTPS
+  ```
+
 ### Task 3: Set Up Ansible Control Node
  Install necessary dependencies on the Ansible control node:
 

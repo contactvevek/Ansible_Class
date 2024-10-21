@@ -185,7 +185,7 @@
      - name: Display the result of the default page request
        debug:
          var: result.content
-  ```
+ ```
  
   save the file using `ESCAPE + :wq!`
   

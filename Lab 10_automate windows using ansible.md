@@ -51,7 +51,7 @@
   ```powershell
   winrm create winrm/config/Listener?Address=*+Transport=HTTPS "@{Hostname=""35.188.200.132""; CertificateThumbprint=""$thumbprint""}"
   ```
-     ***Note:***If WinRM listener with the same address and transport (HTTPS) is already configured on the system, you need to delete the existing listener before creating a new one with the desired configuration
+     ***Note:*** If WinRM listener with the same address and transport (HTTPS) is already configured on the system, you need to delete the existing listener before creating a new one with the desired configuration
    
    ![image](https://github.com/user-attachments/assets/a0cbf878-5c9f-47b2-af91-4df0956d82f6)
    

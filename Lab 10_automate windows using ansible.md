@@ -30,15 +30,15 @@
 
 4. Enable basic authentication  
   ```powershell
-  winrm set winrm/config/service/auth @{Basic="true"}
+  winrm set winrm/config/service/auth '@{Basic="true"}'
  ```
 5. Allow unencrypted traffic  
   ```powershell
- winrm set winrm/config/service @{AllowUnencrypted="true"}
+ winrm set winrm/config/service '@{AllowUnencrypted="true"}'
  ```
 6. Configure trusted hosts (for testing, allows connections from all hosts)
   ```powershell
- winrm set winrm/config/client @{TrustedHosts="*"}
+ winrm set winrm/config/client '@{TrustedHosts="*"}'
  ```
 7. Enable WinRM for HTTPS
  ```powershell
@@ -53,7 +53,7 @@
  $thumbprint = $cert.Thumbprint
  ```
   ```powershell
- winrm create winrm/config/Listener?Address=*+Transport=HTTPS "@{Hostname='35.188.200.132'; CertificateThumbprint='$thumbprint'}"
+ winrm create winrm/config/Listener?Address=*+Transport=HTTPS '@{Hostname="35.188.200.132"; CertificateThumbprint="$thumbprint"}'
  ```
  10. Enable the firewall rule for WinRM
   ```powershell

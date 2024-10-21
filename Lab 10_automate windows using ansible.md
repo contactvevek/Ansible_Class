@@ -6,9 +6,8 @@
 3. Enter the name of the instance `windows-server` and select the Zone in which the instance is going to launch.
 4. Select machine type (i.e e2-standard-4). In the boot disk section, click on Change and select `Windows Server 2022 Datacenter`.
 5. Click on create and launch the instance.
-6. SSH into the machine
-7. Whitelist port 5985(winrm-http) and 5986(winrm-https) in the firewall.
-8. Reset Windows Password and Download `RDP` file to connect with "Windows-Server"
+6. Whitelist port 5985(winrm-http) and 5986(winrm-https) in the firewall.
+7. Reset Windows Password and Download `RDP` file to connect with "Windows-Server"
 
 ### Task 2: Windows Server Configuration
 

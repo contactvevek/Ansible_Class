@@ -137,14 +137,14 @@
  ```
  Add the given content, by pressing "INSERT"
  ```yaml
-  ---
-  - name: Install a package using Chocolatey on Windows server
-    hosts: windows
-    tasks:
-      - name: Install 7zip using Chocolatey
-        win_chocolatey:
-          name: 7zip
-          state: present
+ ---
+ - name: Install a package using Chocolatey on Windows server
+   hosts: windows
+   tasks:
+   - name: Install 7zip using Chocolatey
+     win_chocolatey:
+     name: 7zip
+     state: present
  ```
  save the file using `ESCAPE + :wq!`
  

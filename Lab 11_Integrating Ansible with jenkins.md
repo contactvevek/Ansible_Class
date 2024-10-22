@@ -104,14 +104,6 @@
         ```
          (Copy the entire content of the Private Key, including the **First and Last line** till `5 hyphens` only.)  
        * Once Copied, Paste it into the space provided for the **private key** then click on **Create**.
-    * Add the Github Credentials
-      * Click **Add Credentials**.    
-      * In the Kind dropdown, select **Username and Password**.
-      * Enter the username of your github repo.
-      * Give this credential an ID (e.g., GITHUB). 
-      * Enter the token as the password
-      * Click on **Create**.
-
 
 #### Task 6: Create a Jenkins Pipeline
   A pipeline job will define the steps to pull the YAML files (Ansible playbooks) from GitHub and deploy them using Ansible.
@@ -124,10 +116,10 @@
     agent any
 
     environment {
-        GITHUB_REPO_URL = 'https://github.com/sirin_a-Nafis/ansible_files.git'
+        GITHUB_REPO_URL = 'https://github.com/sirinali07/Yaml-Repo.git'
         GIT_BRANCH = 'master'
         INVENTORY_FILE = 'ansible_playbooks/inventory'
-        PLAYBOOK_FILE = 'ansible_playbooks/install_nginx.yml'
+        PLAYBOOK_FILE = 'ansible_playbooks/install-apache2.yaml'
         SSH_KEY_CREDENTIAL_ID = 'SSH-KEY'
         
     }

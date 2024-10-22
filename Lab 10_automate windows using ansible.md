@@ -143,8 +143,8 @@
    tasks:
    - name: Install 7zip using Chocolatey
      win_chocolatey:
-     name: 7zip
-     state: present
+       name: 7zip
+       state: present
  ```
  save the file using `ESCAPE + :wq!`
  

@@ -86,50 +86,9 @@
    * Inside Tool Configuration, look for **Ansible installations**, click Add Andible.
    * Give the Name as **Ansible**, Slect "Install automatically", and Save the configuration.
 
-#### Task 5: Enable password-less authentication on the worker node
-* On the `Jenkins CLI` execute the below commands
-```
-ssh-keygen -t rsa -b 4096 -C "sirin_n@cloudthat.com"
-```
-```
-chown sirin_a:sirin_a /home/sirin_a/.ssh
-chown sirin_a:sirin_a /home/sirin_a/.ssh/id_rsa
-```
-```
-cat /home/sirin_a/.ssh/id_rsa.pub
-```
-Copy the public Key
 
-* On the Target Node execute the below commnads
-```
-cd /home/sirin_a/.ssh/
-```
-```
-vi authorized_keys
-```
-Paste the copied public key and exit from vi editor
-Now change the access
-```
-chmod 700 ~/.ssh
-```
-```
-chmod 600 ~/.ssh/authorized_keys
-```
-Enable Passwordless authentication
-```
-sudo visudo
-```
-Paste the below and exit the vi editor
-```
-sirin_a ALL=(ALL) NOPASSWD: ALL
-```
-Test the passwordless authentication by executing the below command on the Jenkins CLI
-```
-ssh sirin_a@10.128.0.62
-```
     
-    
-### Task 6: Set Up SSH and the GitHub Credentials in Jenkins
+### Task 5: Set Up SSH and the GitHub Credentials in Jenkins
   You need to give Jenkins access to your target nodes via SSH, so it can run the Ansible playbooks.
 
   * Go to Manage Jenkins > Manage Credentials.
@@ -153,10 +112,8 @@ ssh sirin_a@10.128.0.62
       * Enter the token as the password
       * Click on **Create**.
 
-         ![image](https://github.com/user-attachments/assets/0cb6fa18-301b-44e4-9495-c1bc9c4a95e3)
 
-    
-#### Task 7: Create a Jenkins Pipeline
+#### Task 6: Create a Jenkins Pipeline
   A pipeline job will define the steps to pull the YAML files (Ansible playbooks) from GitHub and deploy them using Ansible.
   
   * Go to **Jenkins Dashboard** and click **New Item**.

@@ -59,7 +59,7 @@
 
    **Note:** (To SignUp for GitHub Account, [Click Here](https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F&source=header-home))
    
-  * You need to generate a **Personal Access Token** (PAT) in GitHub.
+  * You need to generate a **Personal Access Token** (PAT) in GitHub (Optional, when required)
    
   * Click Here To Generate the Token:</summary>
      
@@ -86,9 +86,51 @@
    * Inside Tool Configuration, look for **Ansible installations**, click Add Andible.
    * Give the Name as **Ansible**, Slect "Install automatically", and Save the configuration.
 
-
+#### Task 5: Enable password-less authentication on the worker node
+    * On the `Jenkins CLI` execute the below commands
+    ```bash
+    ssh-keygen -t rsa -b 2048
+    ```
+    Verify the  SSH key pair on your local machine:
+    ```bash
+    ls -l ~/.ssh/id_rsa ~/.ssh/id_rsa.pub
+    ```
+    Copy the public key to Managed Nodes:
+    ```bash
+    cat ~/.ssh/id_rsa.pub
+    ```
+    Log into the each remote server (managed Nodes) via another method (e.g., console access).
+    Add the public key to `~/.ssh/authorized_keys` on the remote servers:
+    ```bash
+    echo "your_public_key_content" >> ~/.ssh/authorized_keys
+    ```
     
-### Task 5: Set Up SSH and the GitHub Credentials in Jenkins
+    Set the below permissions On the remote servers:
+    ```bash
+    chmod 700 ~/.ssh
+    chmod 600 ~/.ssh/authorized_keys
+    ```
+    Enable Passwordless authentication
+    ```
+    sudo visudo
+    ```
+    Paste the below and exit the vi editor
+    ```
+    sirin_a ALL=(ALL) NOPASSWD: ALL
+    ```
+     ```bash
+    exit
+    ```
+    ```
+    Execute the below command on `Jenkin-Server` to verify passwordless authentication has been enabled
+    ```bash
+    ssh Your_User@PUBLIC_IP of managed-node1
+    ```
+    ```bash
+    ssh Your_User@PUBLIC_IP of managed-node2
+    ```
+    
+### Task 6: Set Up SSH and the GitHub Credentials in Jenkins
   You need to give Jenkins access to your target nodes via SSH, so it can run the Ansible playbooks.
 
   * Go to Manage Jenkins > Manage Credentials.
@@ -105,7 +147,7 @@
          (Copy the entire content of the Private Key, including the **First and Last line** till `5 hyphens` only.)  
        * Once Copied, Paste it into the space provided for the **private key** then click on **Create**.
 
-#### Task 6: Create a Jenkins Pipeline
+#### Task 7: Create a Jenkins Pipeline
   A pipeline job will define the steps to pull the YAML files (Ansible playbooks) from GitHub and deploy them using Ansible.
   
   * Go to **Jenkins Dashboard** and click **New Item**.

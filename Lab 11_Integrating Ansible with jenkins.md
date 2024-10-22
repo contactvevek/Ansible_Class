@@ -87,30 +87,31 @@
    * Give the Name as **Ansible**, Slect "Install automatically", and Save the configuration.
 
 #### Task 5: Enable password-less authentication on the worker node
-    * On the `Jenkins CLI` execute the below commands
+
+   On the `Jenkins CLI` execute the below commands
     ```bash
     ssh-keygen -t rsa -b 2048
     ```
-    Verify the  SSH key pair on your local machine:
+  Verify the  SSH key pair on your local machine:
     ```bash
     ls -l ~/.ssh/id_rsa ~/.ssh/id_rsa.pub
     ```
-    Copy the public key to Managed Nodes:
+  Copy the public key to Managed Nodes:
     ```bash
     cat ~/.ssh/id_rsa.pub
     ```
-    Log into the each remote server (managed Nodes) via another method (e.g., console access).
-    Add the public key to `~/.ssh/authorized_keys` on the remote servers:
+  Log into the each remote server (managed Nodes) via another method (e.g., console access).
+  
+  Add the public key to `~/.ssh/authorized_keys` on the remote servers:
     ```bash
     echo "your_public_key_content" >> ~/.ssh/authorized_keys
     ```
-    
-    Set the below permissions On the remote servers:
+  Set the below permissions On the remote servers:
     ```bash
     chmod 700 ~/.ssh
     chmod 600 ~/.ssh/authorized_keys
     ```
-    Enable Passwordless authentication
+  Enable Passwordless authentication
     ```
     sudo visudo
     ```

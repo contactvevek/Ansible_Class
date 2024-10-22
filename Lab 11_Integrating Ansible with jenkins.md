@@ -1,4 +1,4 @@
-### Task 1: Install Jenkins Server
+#### Task 1: Install Jenkins Server
    * Create a file named `jenkin.sh`
       ```
        vi jenkins.sh
@@ -24,7 +24,8 @@
       . ./jenkins.sh
       ```
    * One it's done move to Task 2.
-### Task 2: Login to the Jenkins Server
+     
+#### Task 2: Login to the Jenkins Server
    * Verify the Jenkins Landing Page: Open a web browser and navigate to your Jenkins landing page using your Jenkins server's public IP address. Replace `<Your_Jenkins_IP>` with the actual public IP.
      ```
      http://<Your_Jenkins_IP>:8080/
@@ -50,10 +51,11 @@
    * Once the plugins are installed, it gives you the page where you can create a New **Admin User**.
    * Enter the **User Id** and **Password** followed by **Name** and **E-Mail ID** then click on **Save & Continue**.
    * In the next step, on the Instance Configuration Page, verify your **Jenkins Public IP** and **Port Number** then click on **Save and Finish**
+
      
-### Task 3: Be ready with GitHub Repo
-  * Create a **GitHub Account** & **Public Repository** with name as **"Yaml-Repo"**
-  * Now, Save your  `yaml` files, `Inventory` file, and `Jenkinsfile` in the repository. Alternatively, you can refer to any of your existing project GitHub repositories that contain Ansible YAML files.
+#### Task 3: Be ready with GitHub Repo
+  * Create a **GitHub Account** & **Public Repository** with name as **"ansible_files"**
+  * Now, Save your  `yaml` files, `Inventory` file, in the repository. 
 
    **Note:** (To SignUp for GitHub Account, [Click Here](https://github.com/signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F&source=header-home))
    
@@ -70,14 +72,13 @@
    
    
 
-### Task 4: Configure Ansible in Jenkins 
+#### Task 4: Configure Ansible in Jenkins 
    * Ensure you have the following Jenkins plugins installed:
    
-   * `Git Plugin:` Allows Jenkins to pull code from GitHub.
-   * `GitHub Integration Plugin:` Enables webhooks from GitHub.
-   * `Ansible Plugin:` Enables integration with Ansible to run playbooks.
-
-##### Do the below in Jenkin's Dashboard:
+       * `Git Plugin:` Allows Jenkins to pull code from GitHub.
+       * `GitHub Integration Plugin:` Enables webhooks from GitHub.
+       * `Ansible Plugin:` Enables integration with Ansible to run playbooks.
+       * `SSH Agent Plugin`: To manage and provide SSH credentials 
 
    * Click on Manage Jenkins > Plugins > Available Plugins tab and search for **Ansible** and click Install.
    * Once the installation is completed, click on **Go back to the top page**.
@@ -85,49 +86,141 @@
    * Inside Tool Configuration, look for **Ansible installations**, click Add Andible.
    * Give the Name as **Ansible**, Slect "Install automatically", and Save the configuration.
 
-##### Set Up SSH Credentials in Jenkins
+#### Task 5: Enable password-less authentication on the worker node
+* On the `Jenkins CLI` execute the below commands
+```
+ssh-keygen -t rsa -b 4096 -C "sirin_n@cloudthat.com"
+```
+```
+chown sirin_a:sirin_a /home/sirin_a/.ssh
+chown sirin_a:sirin_a /home/sirin_a/.ssh/id_rsa
+```
+```
+cat /home/sirin_a/.ssh/id_rsa.pub
+```
+Copy the public Key
+
+* On the Target Node execute the below commnads
+```
+cd /home/sirin_a/.ssh/
+```
+```
+vi authorized_keys
+```
+Paste the copied public key and exit from vi editor
+Now change the access
+```
+chmod 700 ~/.ssh
+```
+```
+chmod 600 ~/.ssh/authorized_keys
+```
+Enable Passwordless authentication
+```
+sudo visudo
+```
+Paste the below and exit the vi editor
+```
+sirin_a ALL=(ALL) NOPASSWD: ALL
+```
+Test the passwordless authentication by executing the below command on the Jenkins CLI
+```
+ssh sirin_a@10.128.0.62
+```
+    
+    
+### Task 6: Set Up SSH and the GitHub Credentials in Jenkins
   You need to give Jenkins access to your target nodes via SSH, so it can run the Ansible playbooks.
 
   * Go to Manage Jenkins > Manage Credentials.
   * Click on (global) under Domains.
-  * Click **Add Credentials**.
-    ![image](https://github.com/user-attachments/assets/08eb2602-0ea5-478a-9dc9-273071031f55)
+  * Add the Private Key 
+      * Click **Add Credentials**.    
+      * In the Kind dropdown, select **SSH Username with private key**.
+      * Enter the username that Ansible will use to SSH into your target nodes (i.e `sirin_a`).
+      * Give this credential an ID (e.g., SSH-KEY). 
+      * Now Select "Enter directly" under "Private Key". The private key can be copied form the Jenkins CLI using the below command
+        ```
+        cat /home/sirin_a/.ssh/id_rsa
+        ```
+         (Copy the entire content of the Private Key, including the **First and Last line** till `5 hyphens` only.)  
+       * Once Copied, Paste it into the space provided for the **private key** then click on **Create**.
+    * Add the Github Credentials
+      * Click **Add Credentials**.    
+      * In the Kind dropdown, select **Username and Password**.
+      * Enter the username of your github repo.
+      * Give this credential an ID (e.g., GITHUB). 
+      * Enter the token as the password
+      * Click on **Create**.
 
-  * In the Kind dropdown, select **SSH Username with private key**.
-  * Enter the username that Ansible will use to SSH into your target nodes (i.e `sirin_a`).
-  * Give this credential an ID (e.g., ansible-ssh-key). This will be referenced in the Jenkinsfile.
-  * Now Select "Enter directly" under "Private Key" 
-  * Upload the private key that corresponds to the SSH key used by Ansible to access the target nodes.
-  * **Note:** To get the `Private Key` go to `Jenkins Server` and Execute the below command:
-      ```
-      cat /home/sirin_a/.ssh/id_rsa
-      ```
-     (Copy the entire content of the Private Key, including the **First and Last line** till `5 hyphens` only.)
-     
-   * Once Copied, Paste it into the space provided for the **private key** then click on **Create**..
+         ![image](https://github.com/user-attachments/assets/0cb6fa18-301b-44e4-9495-c1bc9c4a95e3)
 
-      
-    * `Note` : Ensure the target nodes have Ansible set up for passwordless SSH access. Ansible should be able to connect to these nodes using the SSH credentials configured in Jenkins.
     
-##### Create a Jenkins Pipeline
+#### Task 7: Create a Jenkins Pipeline
   A pipeline job will define the steps to pull the YAML files (Ansible playbooks) from GitHub and deploy them using Ansible.
   
   * Go to **Jenkins Dashboard** and click **New Item**.
-  * Enter Enter an item name (e.g., ansible-pipeline), select Pipeline, and click OK.
-  * Scroll down to Pipeline.
-  * Under **Pipeline** Definition, select Pipeline script from SCM.
-  * Choose **Git** as the SCM.
-  * In Repository URL, enter your github repo (i.e https://github.com/sirinali07/Yaml-Repo.git).
-  * Under Credentisls select Add **Jenkins** 
-     ![image](https://github.com/user-attachments/assets/21e771c0-d911-4f8d-aae5-24a8baa54776)
-  * Then you will be prompted to the Jenkins Credentials Provider page. Under Add Credentials, you can add your GitHub Username (i.e sirin_a), Password (Github Token), and Description (i.e Git-Credentials). Then click on Add.
-    ![image](https://github.com/user-attachments/assets/67ddf5e7-ce48-418e-8d7e-e358d17deef7)
+  * Enter an item name (e.g., ansible-pipeline), select Pipeline, and click OK.
+  * Click on the Pipeline and add the below script
+```
+    pipeline {
+    agent any
 
-  * Set the branch (e.g., main or master).
-  * Set Repository browser to **Auto**.
-  * In the `Script Path`  add the Jenkins script file name (i.e **Jenkinsfile) and Save the configuration.
+    environment {
+        GITHUB_REPO_URL = 'https://github.com/sirin_a-Nafis/ansible_files.git'
+        GIT_BRANCH = 'master'
+        INVENTORY_FILE = 'ansible_playbooks/inventory'
+        PLAYBOOK_FILE = 'ansible_playbooks/install_nginx.yml'
+        SSH_KEY_CREDENTIAL_ID = 'SSH-KEY'
+        
+    }
 
+    stages {
+        stage('Clone Repository') {
+            steps {
+                script {
+                    sh '''
+                        if [ -d "ansible_playbooks" ]; then
+                            rm -rf ansible_playbooks
+                        fi
+                        git clone -b ${GIT_BRANCH} ${GITHUB_REPO_URL} ansible_playbooks
+                    '''
+                }
+            }
+        }
 
+        stage('Set Up SSH Key') {
+            steps {
+                script {
+                    sshagent([SSH_KEY_CREDENTIAL_ID]) {
+                        echo 'SSH Key added for Ansible playbook execution.'
+                    }
+                }
+            }
+        }
+
+        
+
+        stage('Execute Ansible Playbook') {
+            steps {
+                script {
+                    sshagent([SSH_KEY_CREDENTIAL_ID]) {
+                        sh '''
+                            ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i ${INVENTORY_FILE} ${PLAYBOOK_FILE} \
+                            -e "target_user=sirin_a"
+                        '''
+                    }
+                }
+            }
+        }
+    }
+
+ 
+}
+```
+* Click save and Build
+    
+ 
 
 
 

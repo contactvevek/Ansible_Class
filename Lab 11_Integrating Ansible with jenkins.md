@@ -17,6 +17,7 @@
        sudo systemctl start jenkins
        sudo systemctl enable jenkins
        sudo systemctl status jenkins
+       sudo apt update && sudo apt install ansible -y #for Ansible Installation
       ```
       save the file using `ESCAPE + :wq!`
    * Now execute the `jenkins.sh` script file

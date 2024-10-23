@@ -119,9 +119,8 @@
     ```
     sirin_a ALL=(ALL) NOPASSWD: ALL
     ```
-     ```bash
+    ```bash
     exit
-    ```
     ```
     Execute the below command on `Jenkin-Server` to verify passwordless authentication has been enabled
     ```bash

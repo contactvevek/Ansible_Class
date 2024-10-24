@@ -327,7 +327,7 @@ A pipeline job will define the steps to pull the YAML files (Ansible playbooks) 
 
     environment {
         GITHUB_REPO_URL = 'https://github.com/sirinali07/cognizant-capstone-repo.git'
-        GIT_BRANCH = 'main'
+        GIT_BRANCH = 'master'
         INVENTORY_FILE = 'ansible_playbooks/inventory'
         PLAYBOOK_FILE = 'ansible_playbooks/prometheus.yaml'
         SSH_KEY_CREDENTIAL_ID = 'SSH-KEY'

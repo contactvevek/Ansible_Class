@@ -82,6 +82,7 @@ sudo visudo
 ```
 sirin_a ALL=(ALL) NOPASSWD: ALL
 ```
+* exit from the managed node-1
 ```bash
 exit
 ```

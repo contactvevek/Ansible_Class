@@ -49,9 +49,7 @@ sudo vi /etc/ansible/hosts
 ```
 
 Add the `private ip` of the managed nodes to the `ansible_hosts`
-```ini
-node1   ansible_host=<node1-private-ip>  
-node2   ansible_host=<node2-private-ip> 
+```
 localhost ansible_connection=local
 ```
 **save the file using** `ESCAPE + :wq!`

@@ -1,5 +1,4 @@
 
-## Lab 1: Installation and Configuration of Ansible
 
 ### Task 1: Launching an Instance in GCP
 

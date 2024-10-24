@@ -7,7 +7,7 @@
 2. launch 2 VM Instance.
 6. SSH into one of the machine
 
-### Task 2: Execute the Following Commands for Installing the Ansible
+#### Task 2: Execute the Following Commands for Installing the Ansible
 
 * Check the IP is changed to “ansible-workstation” hostname and run the following command to update:
 ```bash
@@ -34,7 +34,7 @@ sudo apt install ansible -y
 ansible --version
 ```
 
-### Task 3: Make Entry in the Host File
+#### Task 3: Make Entry in the Host File
 * Create `Ansible directory`  by running the following command:
 ```bash
 sudo mkdir /etc/ansible
@@ -298,7 +298,7 @@ node-1   ansible_ssh_host=10.128.0.54 ansible_ssh_user=sirin_a
 * Give the Name as **Ansible**, Slect "Install automatically", and Save the configuration.
 
   
-### Task 7: Set Up SSH and the GitHub Credentials in Jenkins
+#### Task 7: Set Up SSH and the GitHub Credentials in Jenkins
 You need to give Jenkins access to your target nodes via SSH, so it can run the Ansible playbooks.
 
 * Go to Manage Jenkins > Manage Credentials.
@@ -314,6 +314,7 @@ cat /home/sirin_a/.ssh/id_rsa
 ```
  (Copy the entire content of the Private Key, including the **First and Last line** till `5 hyphens` only.)  
 * Once Copied, Paste it into the space provided for the **private key** then click on **Create**.
+  
 #### Task 7: Create a Jenkins Pipeline
 A pipeline job will define the steps to pull the YAML files (Ansible playbooks) from GitHub and deploy them using Ansible.
 

@@ -326,10 +326,10 @@ A pipeline job will define the steps to pull the YAML files (Ansible playbooks) 
     agent any
 
     environment {
-        GITHUB_REPO_URL = 'https://github.com/sirinali07/Yaml-Repo.git'
-        GIT_BRANCH = 'master'
+        GITHUB_REPO_URL = 'https://github.com/sirinali07/cognizant-capstone-repo.git'
+        GIT_BRANCH = 'main'
         INVENTORY_FILE = 'ansible_playbooks/inventory'
-        PLAYBOOK_FILE = 'ansible_playbooks/install-apache2.yaml'
+        PLAYBOOK_FILE = 'ansible_playbooks/prometheus.yaml'
         SSH_KEY_CREDENTIAL_ID = 'SSH-KEY'
         
     }

@@ -1,6 +1,6 @@
 
 
-#### Task 1: Launching an Instance in GCP
+#### Task 1: Launching the VM Instances in GCP
 
 1. Go to the GCP Console and select Compute Engine.
 2. launch 2 VM Instance.
@@ -44,7 +44,7 @@ sudo mkdir /etc/ansible
 sudo vi /etc/ansible/hosts
 ```
 
-* Add the `private ip` of the managed nodes to the `ansible_hosts`
+* Add the `localhost` to the `ansible_hosts`
 ```
 localhost ansible_connection=local
 ```

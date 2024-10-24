@@ -1,6 +1,6 @@
 
 
-### Task 1: Launching an Instance in GCP
+#### Task 1: Launching an Instance in GCP
 
 1. Go to the GCP Console and select Compute Engine.
 2. launch 2 VM Instance.

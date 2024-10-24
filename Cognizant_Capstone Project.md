@@ -315,7 +315,7 @@ cat /home/sirin_a/.ssh/id_rsa
  (Copy the entire content of the Private Key, including the **First and Last line** till `5 hyphens` only.)  
 * Once Copied, Paste it into the space provided for the **private key** then click on **Create**.
   
-#### Task 7: Create a Jenkins Pipeline
+#### Task 8: Create a Jenkins Pipeline
 A pipeline job will define the steps to pull the YAML files (Ansible playbooks) from GitHub and deploy them using Ansible.
 
 * Go to **Jenkins Dashboard** and click **New Item**.
@@ -378,4 +378,11 @@ A pipeline job will define the steps to pull the YAML files (Ansible playbooks) 
 }
 ```
 * Click save and Build
-    
+* 
+#### Task 8: Access Prometheus Web UI: 
+
+* Open a browser and go to `http://<your-gcp-vm-ip>:9090`
+- i.e http://35.232.129.112:9090/
+- Ensure the whitelisting of the port 9090
+![image](https://github.com/user-attachments/assets/da1bd9c3-c360-41b3-9043-65b977f63607)
+

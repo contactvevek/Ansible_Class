@@ -129,7 +129,7 @@
     Add the following lines to the configuration file to specify the callback plugin path
     ```bash
     [defaults]
-    callback_plugins = ~/plugins/callback_plugins
+    callback_plugins = ~/plugins
     ```
     - This tells Ansible to look in the ~/plugins/callback_plugins directory for custom callback plugins.
     - If the `[defaults]` section already exists, simply add `callback_plugins = ~/plugins/callback_plugins` below it.

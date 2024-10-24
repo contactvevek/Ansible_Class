@@ -298,7 +298,7 @@ node-1   ansible_ssh_host=10.128.0.54 ansible_ssh_user=sirin_a
 * Give the Name as **Ansible**, Slect "Install automatically", and Save the configuration.
 
   
-#### Task 7: Set Up SSH and the GitHub Credentials in Jenkins
+#### Task 7: Set Up the SSH  Credentials in Jenkins
 You need to give Jenkins access to your target nodes via SSH, so it can run the Ansible playbooks.
 
 * Go to Manage Jenkins > Manage Credentials.

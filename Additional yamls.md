@@ -70,4 +70,41 @@ ansible-playbook file.yaml
 
 ![image](https://github.com/user-attachments/assets/e608b8ec-304f-4b99-b6d5-4ea4c01e78d1)
 
+### any_errors_fatal 
+If any task fails, the entire playbook execution will stop.
+**Without any_errors_fatal**
+By default, Ansible will continue running tasks on other hosts if one host encounters an error. For instance, if node-1 encounters an error during task execution, Ansible will still continue the playbook on node-2, node-3, etc.
+
+![image](https://github.com/user-attachments/assets/1970dcfd-cedd-44b8-9e39-162cefd84a22)
+
+```bash
+vi any_errors_fatal.yaml
+```
+
+```yaml
+---
+  - hosts: '{{ hostname }}'
+    become: yes
+    any_errors_fatal: yes
+    vars:
+      hostname: all
+      package1: apache2
+    tasks:
+      - name: Install defined package
+        apt:
+          name: '{{ package1 }}'
+          update_cache: yes
+          state: latest
+      - name: Start desired service
+        service:
+          name: '{{ package1 }}'
+          state: started
+```
+```bash
+ansible-playbook any_errors_fatal.yaml
+```
+**With any_errors_fatal: yes**
+When any_errors_fatal is set to yes, if one host (e.g., node-1) fails during task execution, all other hosts will immediately stop executing their tasks. The playbook will stop running across all hosts in the inventory.
+
+![image](https://github.com/user-attachments/assets/a5be877b-b54a-410b-a8e4-ba908bf9edee)
 

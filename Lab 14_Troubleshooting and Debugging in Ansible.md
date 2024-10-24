@@ -34,12 +34,12 @@ Add the given content, by pressing `INSERT`
         apt:
           name: "{{ web_package }}"
           state: latest
-    rescue:
+      rescue:
       - name: Install {{ db_package }} package
         apt:
           name: "{{ db_package }}"
           state: latest
-    always:
+      always:
       - name: Start {{ db_service }} service
         service:
           name: "{{ db_service }}"

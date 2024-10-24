@@ -78,7 +78,7 @@ chmod 600 ~/.ssh/authorized_keys
 ```
 sudo visudo
 ```
-* Paste the below and exit the vi editor
+* Paste the below, replace with your username and exit the vi editor
 ```
 sirin_a ALL=(ALL) NOPASSWD: ALL
 ```

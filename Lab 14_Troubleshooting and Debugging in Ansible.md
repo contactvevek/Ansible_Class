@@ -128,6 +128,8 @@ Monitor the output of the playbook execution. You should see the following:
 
 ### Task 3 : Ansible Notify and Handlers 
 
+In Ansible, The run_once directive ensures that a task is executed only once, regardless of how many hosts are in the play.
+
 Create a playbook file named `notify-handlers.yaml`
 ```bash
 vi notify-handlers.yaml
@@ -163,7 +165,53 @@ Execute the playbook using the ansible-playbook command
 ```bash
 ansible-playbook notify-handlers.yaml
 ```
-### Task 4 : Ansible Playbook Execution and Validation
+### Task 4 : run_once
+
+
+Create a playbook file named `run_once.yaml`
+```bash
+vi run_once.yaml
+```
+Add the given content, by pressing `INSERT`
+
+```yaml
+---
+- hosts: all
+  become: yes
+  vars:
+    file_url: "https://download.docker.com/mac/static/stable/x86_64/docker-27.3.1.tgz" # URL for the file to download
+    temp_path: "/tmp/docker.tgz"  # Path for the downloaded file
+    dest_path: "/etc/docker/docker.tgz"  # Destination path on all servers
+    download_host: "node-1"  # Specify the host for the run_once task
+
+  tasks:
+    - name: Ensure destination directory exists on all servers
+      file:
+        path: "/etc/docker"
+        state: directory
+        mode: '0755'
+
+    - name: Download Docker binary on a specific server
+      get_url:
+        url: "{{ file_url }}"
+        dest: "{{ temp_path }}"
+      run_once: yes
+      delegate_to: "{{ download_host }}"  # Run only on the defined host
+
+    - name: Distribute Docker binary to all servers
+      copy:
+        src: "{{ temp_path }}"
+        dest: "{{ dest_path }}"
+        mode: '0644'
+```
+save the file using `ESCAPE + :wq!`
+
+Execute the playbook using the ansible-playbook command
+```bash
+ansible-playbook run_once.yaml
+```
+
+### Task 5 : Ansible Playbook Execution and Validation
 
 **Running the Playbook in Dry-Run Mode**
 

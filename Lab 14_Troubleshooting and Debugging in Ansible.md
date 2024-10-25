@@ -148,11 +148,11 @@ Add the given content, by pressing `INSERT`
      state: present
     notify: Restart Apache
 
-- name: Deploy index.html
-  copy:
-    content: "<html><h1>Welcome to node {{ ansible_hostname }}</h1></html>"
-    dest: var/www/html/index.html
-  notify: Restart Apache
+  - name: Deploy index.html
+    copy:
+     content: "<html><h1>Welcome to node {{ ansible_hostname }}</h1></html>"
+     dest: var/www/html/index.html
+    notify: Restart Apache
 
   handlers:
   - name: Restart Apache

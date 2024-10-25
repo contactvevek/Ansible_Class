@@ -214,77 +214,116 @@ ansible-playbook jenkins.yaml
 * Copy the below content for your `Prometheous Server`
 ```yaml
 ---
-- name: Start installing Jenkins pre-requisites before installing Jenkins
-  hosts: localhost
+- name: Setup Prometheus on GCP VM
+  hosts: node-1
   become: yes
-  gather_facts: no
+  vars:
+    prometheus_version: "2.47.1"
+    prometheus_dir: "/etc/prometheus"
+    prometheus_data_dir: "/var/lib/prometheus"
+    prometheus_user: "prometheus"
 
   tasks:
+    - name: Create prometheus user
+      user:
+        name: "{{ prometheus_user }}"
+        shell: /bin/false
 
-    - name: Cleanup old Jenkins configurations and packages
-      block:
-        - name: Remove old Jenkins repository configuration
-          file:
-            path: /etc/apt/sources.list.d/jenkins.list
-            state: absent
+    - name: Download Prometheus
+      get_url:
+        url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+        dest: "/tmp/prometheus-{{ prometheus_version }}.tar.gz"
+        mode: '0755'
 
-        - name: Remove any existing Jenkins installation
-          apt:
-            name: jenkins
-            state: absent
+    - name: Extract Prometheus
+      unarchive:
+        src: "/tmp/prometheus-{{ prometheus_version }}.tar.gz"
+        dest: "/tmp/"
+        remote_src: yes
 
-        - name: Remove any leftover Jenkins data
-          command: rm -rf /var/lib/jenkins
-          ignore_errors: yes  # Ignore errors in case the directory does not exist
+    - name: Copy Prometheus binaries
+      copy:
+        src: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/prometheus"
+        dest: "/usr/local/bin/prometheus"
+        mode: '0755'
+        remote_src: yes
 
-    - name: Update apt repository with latest packages
-      apt:
-        update_cache: yes
-        upgrade: yes
+    - name: Copy Prometheus configuration file
+      copy:
+        src: "/tmp/prometheus-{{ prometheus_version }}.linux-amd64/promtool"
+        dest: "/usr/local/bin/promtool"
+        mode: '0755'
+        remote_src: yes
 
-    - name: Install JDK (openjdk-17-jdk) on Jenkins server
-      apt:
-        name: openjdk-17-jdk
-        update_cache: yes
+    - name: Create directories for Prometheus
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ prometheus_user }}"
+        group: "{{ prometheus_user }}"
+        mode: '0755'
+      loop:
+        - "{{ prometheus_dir }}"
+        - "{{ prometheus_data_dir }}"
 
-    - name: Install Jenkins apt repository key
-      apt_key:
-        url: https://pkg.jenkins.io/debian/jenkins.io-2023.key
-        state: present
+    - name: Copy Prometheus config file
+      copy:
+        dest: "{{ prometheus_dir }}/prometheus.yml"
+        content: |
+          global:
+            scrape_interval: 15s
 
-    - name: Configure the Jenkins apt repository
-      apt_repository:
-        repo: deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian binary/
-        filename: jenkins
-        state: present
+          scrape_configs:
+            - job_name: 'prometheus'
+              static_configs:
+                - targets: ['localhost:9090']
 
-    - name: Update apt-get repository with "apt-get update"
-      apt:
-        update_cache: yes
+            - job_name: 'node_exporter'
+              static_configs:
+                - targets: ['localhost:9100']
 
-    - name: Install Jenkins
-      apt:
-        name: jenkins
-        update_cache: yes
+            - job_name: 'remote_servers'
+              static_configs:
+                - targets:
+                  - '34.72.161.125:9100'
+                  - '35.188.169.92:9100'
+        owner: "{{ prometheus_user }}"
+        group: "{{ prometheus_user }}"
+        mode: '0644'
 
-    - name: Start Jenkins service
-      service:
-        name: jenkins
+    - name: Create systemd service for Prometheus
+      copy:
+        dest: /etc/systemd/system/prometheus.service
+        content: |
+          [Unit]
+          Description=Prometheus
+          Wants=network-online.target
+          After=network-online.target
+
+          [Service]
+          User=prometheus
+          ExecStart=/usr/local/bin/prometheus --config.file={{ prometheus_dir }}/prometheus.yml --storage.tsdb.path={{ prometheus_data_dir }}
+          Restart=always
+
+          [Install]
+          WantedBy=multi-user.target
+        owner: root
+        group: root
+        mode: '0644'
+      notify:
+        - Reload systemd
+
+    - name: Start and enable Prometheus service
+      systemd:
+        name: prometheus
+        enabled: yes
         state: started
 
-    - name: Wait for Jenkins to create the initial admin password file
-      wait_for:
-        path: /var/lib/jenkins/secrets/initialAdminPassword
+  handlers:
+    - name: Reload systemd
+      ansible.builtin.systemd:
+        daemon_reload: yes
 
-    - name: Display Jenkins admin password
-      command: cat /var/lib/jenkins/secrets/initialAdminPassword
-      register: out
-
-    - debug:
-        msg: >
-          Jenkins is up and running!
-          Access Jenkins at: http://<Public_IP>:8080 
-          Initial Admin Password: {{ out.stdout }}
 ```
 * Copy the below content for your `inventory` file, modify the username and IP 
 ```yaml
